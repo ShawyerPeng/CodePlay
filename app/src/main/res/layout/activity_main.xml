@@ -33,8 +33,7 @@
         android:id="@+id/my_image_view"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        fresco:placeholderImage="@drawable/placeholder"
-        />
+        fresco:placeholderImage="@drawable/placeholder" />
 
     <EditText
         android:id="@+id/tag"

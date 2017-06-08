@@ -1,6 +1,7 @@
 package com.example.finalproject.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     private static String url = "http://115.159.188.200:8001/";
     private static Uri uri;
 
+    private static SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                         cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
                         okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
-                        String username = input_username.getText().toString();
-                        String password = input_password.getText().toString();
+                        final String username = input_username.getText().toString();
+                        final String password = input_password.getText().toString();
                         RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
                         Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
@@ -64,6 +68,17 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
+                                // 保存用户名及密码
+                                sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                editor.putString("username", username);
+                                editor.putString("password", password);
+                                editor.commit();
+
+                                System.out.println(sharedPreferences.getString("username", username));
+                                System.out.println(sharedPreferences.getString("password", password));
+                                System.out.println("---------------");
+
                                 Log.e("LoginActivity", response.body().string());
                                 btn_login();
                             }
