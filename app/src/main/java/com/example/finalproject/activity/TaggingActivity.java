@@ -40,6 +40,7 @@ public class TaggingActivity extends AppCompatActivity {
     private static Runnable runnableUi;
     private static String url = "http://115.159.188.200:8001/";
     private static Uri uri;
+    private static String pid;
 
     private static SharedPreferences sharedPreferences;
 
@@ -172,12 +173,28 @@ public class TaggingActivity extends AppCompatActivity {
 
                         JsonParser parser = new JsonParser();
                         JsonObject pic = parser.parse(bodyImg).getAsJsonObject();
-                        String pid = pic.get("pid").getAsString();
+                        pid = pic.get("pid").getAsString();
                         url = pic.get("url").getAsString();
                         System.out.println(pid + " " + url);
 
                         uri = Uri.parse("http://115.159.188.200:8001" + url);
                         handler.post(runnableUi);
+
+
+                        System.out.println("*******************" + BI1.getText() + BI2.getText() + BI3.getText() + BI4.getText() + BI5.getText() + BI6.getText());
+                        String tag = BI5.getText().toString();
+                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
+                        Request requestPostTag = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPostTag).build();
+                        okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.e("TaggingActivity", "上传标签失败！");
+                            }
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                Log.e("TaggingActivity", "tag:" + response.body().string());
+                            }
+                        });
                     }
                 }).start();
 

@@ -166,11 +166,11 @@
                         android:text="ok" />
 
                     <Button
-                        android:id="@+id/btn_JustTest"
+                        android:id="@+id/btn_ustTest"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:text="测试" />
+                        android:text="ok" />
                 </LinearLayout>
 
                 <LinearLayout
