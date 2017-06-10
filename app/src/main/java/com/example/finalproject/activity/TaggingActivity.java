@@ -180,11 +180,15 @@ public class TaggingActivity extends AppCompatActivity {
                         uri = Uri.parse("http://115.159.188.200:8001" + url);
                         handler.post(runnableUi);
 
-
+//                        String postBody = "{\"type\":\"\"}";
+//                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
+//                        Request requestPostTag = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPostTag)
+//                                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
                         System.out.println("*******************" + BI1.getText() + BI2.getText() + BI3.getText() + BI4.getText() + BI5.getText() + BI6.getText());
                         String tag = BI5.getText().toString();
-                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
+                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", "111,222,333").build();
                         Request requestPostTag = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPostTag).build();
+
                         okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
