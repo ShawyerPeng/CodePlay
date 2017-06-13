@@ -149,7 +149,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <EditText
                         android:id="@+id/input_tag"
@@ -159,18 +161,18 @@
                         android:hint="请输入标签" />
 
                     <Button
+                        android:id="@+id/btn_AddTag"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.35"
+                        android:text="添加" />
+
+                    <Button
                         android:id="@+id/btn_SubmitTag"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:text="ok" />
-
-                    <Button
-                        android:id="@+id/btn_JustTest"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
-                        android:text="ok" />
+                        android:text="提交" />
                 </LinearLayout>
 
                 <LinearLayout

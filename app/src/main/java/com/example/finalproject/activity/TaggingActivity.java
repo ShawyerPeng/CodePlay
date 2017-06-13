@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import okhttp3.Call;
@@ -44,7 +45,7 @@ public class TaggingActivity extends AppCompatActivity {
 
     private static SharedPreferences sharedPreferences;
 
-    private Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_sub,b_test;
+    private Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_add,b_sub;
     private EditText input_tag;
     private int tag_num=0;
     private Stack<Button> buttonStack= new Stack<Button>();
@@ -74,8 +75,8 @@ public class TaggingActivity extends AppCompatActivity {
         BI5 = (Button) findViewById(R.id.btn_wode_input5);
         BI6 = (Button) findViewById(R.id.btn_wode_input6);
         input_tag = (EditText) findViewById(R.id.input_tag);
+        b_add = (Button) findViewById(R.id.btn_AddTag);
         b_sub = (Button) findViewById(R.id.btn_SubmitTag);
-        b_test = (Button) findViewById(R.id.btn_JustTest);
 
         B1.setVisibility(View.GONE);
         B2.setVisibility(View.GONE);
@@ -89,6 +90,13 @@ public class TaggingActivity extends AppCompatActivity {
         BI4.setVisibility(View.GONE);
         BI5.setVisibility(View.GONE);
         BI6.setVisibility(View.GONE);
+
+        b1.setText("标签1");
+        b2.setText("标签2");
+        b3.setText("标签3");
+        b4.setText("标签4");
+        b5.setText("标签5");
+        b6.setText("标签6");
 
         buttonStack.push(BI1);
         buttonStack.push(BI2);
@@ -107,7 +115,52 @@ public class TaggingActivity extends AppCompatActivity {
             }
         };
 
-        b_sub.setOnClickListener(new View.OnClickListener() {
+        new Thread(new Runnable() {
+            public void run() {
+                cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
+                okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+
+                sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                String username = sharedPreferences.getString("username", null);
+                String password = sharedPreferences.getString("password", null);
+                RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
+                Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
+                okHttpClient.newCall(requestPost).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                    }
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                    }
+                });
+                Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
+                Response responseImg = null;
+                try {
+                    responseImg = okHttpClient.newCall(requestImg).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String bodyImg = null;
+                try {
+                    bodyImg = responseImg.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(bodyImg);
+
+                JsonParser parser = new JsonParser();
+                JsonObject pic = parser.parse(bodyImg).getAsJsonObject();
+                pid = pic.get("pid").getAsString();
+                url = pic.get("url").getAsString();
+                System.out.println(pid + " " + url);
+
+                uri = Uri.parse("http://114.115.212.203:8001" + url);
+                handler.post(runnableUi);
+            }
+        }).start();
+
+
+        b_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (input_tag.getText().length() == 0) {
@@ -122,10 +175,12 @@ public class TaggingActivity extends AppCompatActivity {
                 buttonStack.peek().setVisibility(View.VISIBLE);
                 buttonStack.pop();
                 tag_num++;
+
+                input_tag.setText(null);
             }
         });
 
-        b_test.setOnClickListener(new View.OnClickListener() {
+        b_sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (tag_num>=6){
@@ -186,9 +241,28 @@ public class TaggingActivity extends AppCompatActivity {
                         // RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
                         // Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag)
                         //        .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
-                        System.out.println("*******************" + BI1.getText() + BI2.getText() + BI3.getText() + BI4.getText() + BI5.getText() + BI6.getText());
-                        String tag = BI5.getText().toString();
-                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
+                        StringBuilder tag = new StringBuilder();
+                        ArrayList<String> stringArrayList = new ArrayList<String>();
+                        stringArrayList.add(B1.getText().toString().trim());
+                        stringArrayList.add(B2.getText().toString().trim());
+                        stringArrayList.add(B3.getText().toString().trim());
+                        stringArrayList.add(B4.getText().toString().trim());
+                        stringArrayList.add(B5.getText().toString().trim());
+                        stringArrayList.add(B6.getText().toString().trim());
+                        stringArrayList.add(BI1.getText().toString().trim());
+                        stringArrayList.add(BI2.getText().toString().trim());
+                        stringArrayList.add(BI3.getText().toString().trim());
+                        stringArrayList.add(BI4.getText().toString().trim());
+                        stringArrayList.add(BI5.getText().toString().trim());
+                        stringArrayList.add(BI6.getText().toString().trim());
+                        for (int i=0; i<stringArrayList.size(); i++) {
+                            if (!(stringArrayList.get(i).equals(""))) {
+                                tag.append(stringArrayList.get(i)).append(",");
+                            }
+                        }
+                        tag.delete(tag.length()-1,tag.length());
+                        Log.e("Tag: ", tag.toString());
+                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag.toString()).build();
                         Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag).build();
 
                         okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
@@ -203,6 +277,7 @@ public class TaggingActivity extends AppCompatActivity {
                         });
                     }
                 }).start();
+                input_tag.setText(null);
             }
         });
 
