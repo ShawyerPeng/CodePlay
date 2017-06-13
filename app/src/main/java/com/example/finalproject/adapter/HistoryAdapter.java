@@ -1,15 +1,15 @@
 package com.example.finalproject.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
 import com.example.finalproject.entity.History;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.Vector;
 
@@ -42,18 +42,17 @@ public class HistoryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.history_item, null);
-        SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.History_image);
-        TagGroup mTagGroup = (TagGroup) view.findViewById(R.id.tag_group);
-
         history = list.get(position);
 
-//        ImageView imageView = (ImageView) view.findViewById(R.id.History_image);
-//        imageView.setImageURI(Uri.parse(history.getImageid()));
-//        System.out.println("********" + Uri.parse(history.getImageid()));
 //        TextView textView = (TextView) view.findViewById(R.id.History_tags);
 //        textView.setText(history.getTags());
+//        SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.History_image);
+//        draweeView.setImageURI(Uri.parse(history.getImageid()).toString());
 
-        draweeView.setImageURI(Uri.parse(history.getImageid()).toString());
+        ImageView imageView = (ImageView) view.findViewById(R.id.History_image);
+        Glide.with(view).load(history.getImageid()).into(imageView);
+
+        TagGroup mTagGroup = (TagGroup) view.findViewById(R.id.tag_group);
         mTagGroup.setTags(history.getTags());
 
         return view;

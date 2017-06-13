@@ -6,11 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ImageView-->
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
         <!--android:id="@+id/History_image"-->
         <!--android:layout_width="100dp"-->
         <!--android:layout_height="100dp"-->
-        <!--android:src="@drawable/logo"/>-->
+        <!--android:layout_weight="1.5"-->
+        <!--android:padding="5dp"-->
+        <!--fresco:placeholderImage="@drawable/loadingimage"/>-->
 
     <!--<TextView-->
         <!--android:id="@+id/History_tags"-->
@@ -24,13 +26,11 @@
         <!--android:layout_marginRight="10dp"-->
         <!--android:text="标签1,标签2,标签3,标签1,标签2,标签3"/>-->
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/History_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_weight="1.5"
-        android:padding="5dp"
-        fresco:placeholderImage="@drawable/loadingimage"/>
+        android:src="@drawable/loadingimage"/>
 
     <me.gujun.android.taggroup.TagGroup
         android:id="@+id/tag_group"

@@ -3,7 +3,6 @@ package com.example.finalproject.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -35,33 +34,33 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class HistoryActivity extends Activity  {
+public class HistoryActivity extends Activity {
     private static SharedPreferences sharedPreferences;
     private static ClearableCookieJar cookieJar;
     private static OkHttpClient okHttpClient;
     private static Handler handler = new Handler();
     private static Runnable runnableUi;
-    private static Runnable runnableUi2;
     private static String url = "http://114.115.212.203:8001/";
-    private static Uri uri;
-
-    private static String aPid;
     private static String aUrl;
     private final static Object[] finalUrl = new Object[1];
 
     private static ArrayList<History> historyArrayList;
     private static int pos;
 
-    int num;
+
     private static HistoryAdapter adapter;
     private static Vector<History> list = new Vector<History>();
 
     ListView listView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        pos = 0;
 
         new Thread(new Runnable() {
             public void run() {
@@ -98,7 +97,6 @@ public class HistoryActivity extends Activity  {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println(bodyInfo);
 
                 JsonParser parser = new JsonParser();
                 JsonObject object = parser.parse(bodyInfo).getAsJsonObject();
@@ -121,23 +119,14 @@ public class HistoryActivity extends Activity  {
         }).start();
 
         final Context context = HistoryActivity.this;
-
         runnableUi = new Runnable() {
             @Override
             public void run() {
                 listView = (ListView)findViewById(R.id.History_listview);
                 initData();
-                handler.post(runnableUi2);
-            }
-        };
-
-        runnableUi2 = new Runnable() {
-            @Override
-            public void run() {
 
                 adapter = new HistoryAdapter(context, list);
                 listView.setAdapter(adapter);
-
                 listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -155,21 +144,16 @@ public class HistoryActivity extends Activity  {
                 });
             }
         };
-
     }
 
     public void initData(){
         for(int i=0; i<5; i++) {
             if (pos < historyArrayList.size()) {
-                Log.e("lalala",historyArrayList.get(pos).getImageid());
-                History history = new History(getUrlByPid(historyArrayList.get(pos).getImageid()), historyArrayList.get(pos).getTags());
-                System.out.println("-----------获取----------" + getUrlByPid(historyArrayList.get(pos).getImageid()));
+                list.add(new History(getUrlByPid(historyArrayList.get(pos).getImageid()), historyArrayList.get(pos).getTags()));
             }
             pos++;
         }
     }
-
-
     public void load(){
         for(int i=0; i<5; i++) {
             if (pos < historyArrayList.size()) {
@@ -184,43 +168,21 @@ public class HistoryActivity extends Activity  {
         Request requestUrl = new Request.Builder().url("http://114.115.212.203:8001/getpicbyid/").post(requestBodyUrl).build();
 
         final Object[] finals = new Object[1];
-
-        final Call call = okHttpClient.newCall(requestUrl);
-        new Runnable() {
+        okHttpClient.newCall(requestUrl).enqueue(new Callback() {
             @Override
-            public void run() {
-                try {
-                    Response response = call.execute();
-                    JsonObject jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
-                    aUrl = jsonObject.getAsJsonPrimitive("url").getAsString();
-                    finals[0] = HistoryActivity.url + aUrl.substring(1, aUrl.length());
-                    Log.e("Final Url",(String) finals[0]);
-                    adapter.notify();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(Call call, IOException e) {
+                Log.e("HistoryActivity", "请求登录失败！");
             }
-        };
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                JsonObject jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
+                aUrl = jsonObject.getAsJsonPrimitive("url").getAsString();
+                finals[0] = HistoryActivity.url + aUrl.substring(1, aUrl.length());
+                Log.e("Final Url",(String) finals[0]);
+            }
+        });
 
-
-        return (String) finals[0];
-
-//        okHttpClient.newCall(requestUrl).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.e("HistoryActivity", "请求登录失败！");
-//            }
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-////                Log.e("HistoryActivity", response.body().string());
-//                JsonObject jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
-//                aUrl = jsonObject.getAsJsonPrimitive("url").getAsString();
-//                finals[0] = HistoryActivity.url + aUrl.substring(1, aUrl.length());
-//                Log.e("Final Url",(String) finals[0]);
-//            }
-//
-//        });
+        while (finals[0] == null) {}
+        return (String)finals[0];
     }
-
-
 }
