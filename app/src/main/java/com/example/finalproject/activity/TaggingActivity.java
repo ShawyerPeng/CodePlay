@@ -110,6 +110,10 @@ public class TaggingActivity extends AppCompatActivity {
         b_sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (input_tag.getText().length() == 0) {
+                    Toast.makeText(getApplicationContext(),"标签不能为空！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (tag_num>=6){
                     Toast.makeText(getApplicationContext(),"最多添加6个标签！",Toast.LENGTH_SHORT).show();
                     return;
@@ -141,8 +145,6 @@ public class TaggingActivity extends AppCompatActivity {
                         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
                         String username = sharedPreferences.getString("username", null);
                         String password = sharedPreferences.getString("password", null);
-                        System.out.println("+++++++++++");
-                        System.out.println(username + " " + password);
                         RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
                         Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
@@ -180,13 +182,13 @@ public class TaggingActivity extends AppCompatActivity {
                         uri = Uri.parse("http://114.115.212.203:8001" + url);
                         handler.post(runnableUi);
 
-//                        String postBody = "{\"type\":\"\"}";
-//                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
-//                        Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag)
-//                                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
+                        // String postBody = "{\"type\":\"\"}";
+                        // RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
+                        // Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag)
+                        //        .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
                         System.out.println("*******************" + BI1.getText() + BI2.getText() + BI3.getText() + BI4.getText() + BI5.getText() + BI6.getText());
                         String tag = BI5.getText().toString();
-                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", "111,222,333").build();
+                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
                         Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag).build();
 
                         okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
@@ -201,10 +203,8 @@ public class TaggingActivity extends AppCompatActivity {
                         });
                     }
                 }).start();
-
             }
         });
-
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -381,8 +381,6 @@ public class TaggingActivity extends AppCompatActivity {
                 buttonStack.push(BI6);
             }
         });
-
-
     }
 
     public void btn_feedback(View v){
@@ -390,5 +388,4 @@ public class TaggingActivity extends AppCompatActivity {
         Toast.makeText(this, "feedback", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
-
 }
