@@ -48,4 +48,6 @@ dependencies {
     compile 'com.facebook.fresco:webpsupport:0.12.0'
 
     compile 'com.kyleduo.switchbutton:library:1.4.6'
+
+    compile 'me.gujun.android.taggroup:library:1.4@aar'
 }

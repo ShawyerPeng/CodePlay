@@ -45,7 +45,7 @@ public class UserInfActivity extends AppCompatActivity {
     private static OkHttpClient okHttpClient;
     private static Handler handler;
     private static Runnable runnableUi;
-    private static String url = "http://115.159.188.200:8001/";
+    private static String url = "http://114.115.212.203:8001/";
     private static Uri uri;
     private static String pid;
 
@@ -114,7 +114,7 @@ public class UserInfActivity extends AppCompatActivity {
                 System.out.println("+++++++++++");
                 System.out.println(username + " " + password);
                 RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
-                Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/do_login/").post(requestBodyPost).build();
+                Request requestPost = new Request.Builder().url("http://114.212.203:8001/do_login/").post(requestBodyPost).build();
                 okHttpClient.newCall(requestPost).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -126,7 +126,7 @@ public class UserInfActivity extends AppCompatActivity {
                     }
                 });
 
-                Request requestInfo = new Request.Builder().url("http://115.159.188.200:8001/info/").build();
+                Request requestInfo = new Request.Builder().url("http://114.115.212.203:8001/info/").build();
                 Response responseInfo = null;
                 try {
                     responseInfo = okHttpClient.newCall(requestInfo).execute();

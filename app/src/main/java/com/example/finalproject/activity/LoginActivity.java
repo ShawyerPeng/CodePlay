@@ -1,22 +1,26 @@
 package com.example.finalproject.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.finalproject.R;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 
@@ -33,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private static OkHttpClient okHttpClient;
     private static Handler handler;
     private static Runnable runnableUi;
-    private static String url = "http://115.159.188.200:8001/";
+    private static String url = "http://114.115.212.203:8001/";
     private static Uri uri;
 
     private static SharedPreferences sharedPreferences;
@@ -49,6 +53,15 @@ public class LoginActivity extends AppCompatActivity {
         final EditText input_password = (EditText)findViewById(R.id.login_password_edit);
         Button button_login = (Button)findViewById(R.id.login_login_btn);
 
+        sharedPreferences = this.getSharedPreferences("data", Activity.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("isRemember", true)) {
+            input_username.setText(sharedPreferences.getString("username", ""));
+            input_password.setText(sharedPreferences.getString("password", ""));
+
+            btn_login();
+            this.finish();
+        }
+
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                         final String username = input_username.getText().toString();
                         final String password = input_password.getText().toString();
                         RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
-                        Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/do_login/").post(requestBodyPost).build();
+                        Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -68,19 +81,26 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                // 保存用户名及密码
-                                sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                                editor.putString("username", username);
-                                editor.putString("password", password);
-                                editor.commit();
+                                String message = new JsonParser().parse(response.body().string()).getAsJsonObject().get("msg").getAsString();
+                                if(message.equals("ok")) {
+                                    // 保存用户名及密码
+                                    sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    editor.putString("username", username);
+                                    editor.putString("password", password);
+                                    editor.putBoolean("isRemember", true);
+                                    editor.commit();
 
-                                System.out.println(sharedPreferences.getString("username", username));
-                                System.out.println(sharedPreferences.getString("password", password));
-                                System.out.println("---------------");
+                                    System.out.println(sharedPreferences.getString("username", username));
+                                    System.out.println(sharedPreferences.getString("password", password));
+                                    System.out.println("---------------");
 
-                                Log.e("LoginActivity", response.body().string());
-                                btn_login();
+                                    btn_login();
+                                } else {
+                                    Looper.prepare();
+                                    Toast.makeText(LoginActivity.this, "用户名或密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
                             }
                         });
                     }
@@ -88,12 +108,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
-    public void btn_login(){
+    public void btn_login() {
         Intent intent = new Intent(LoginActivity.this, TaggingActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
 }

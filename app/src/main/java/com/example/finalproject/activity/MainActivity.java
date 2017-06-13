@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static OkHttpClient okHttpClient;
     private static Handler handler;
     private static Runnable runnableUi;
-    private static String url = "http://115.159.188.200:8001/";
+    private static String url = "http://114.115.212.203:8001/";
     private static Uri uri;
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
                         RequestBody requestBodyPost = new FormBody.Builder().add("name", "admin").add("pwd", "9876543210").build();
-                        Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/do_login/").post(requestBodyPost).build();
+                        Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                public void onClick(View v) {
                    new Thread(new Runnable() {
                        public void run() {
-                           Request requestGet = new Request.Builder().url("http://115.159.188.200:8001/info/").build();
+                           Request requestGet = new Request.Builder().url("http://114.115.212.203:8001/info/").build();
                            Response response = null;
                            try {
                                response = okHttpClient.newCall(requestGet).execute();
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                    System.out.println(tag.getTag() + "      " + tag.getFrequent());
                                }
 
-                               Request requestImg = new Request.Builder().url("http://115.159.188.200:8001/getPic/").build();
+                               Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
                                Response responseImg = okHttpClient.newCall(requestImg).execute();
                                String bodyImg = responseImg.body().string();
                                System.out.println(bodyImg);
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                            } catch (IOException e) {
                                e.printStackTrace();
                            }
-                           uri = Uri.parse("http://115.159.188.200:8001" + url);
+                           uri = Uri.parse("http://114.115.212.203:8001" + url);
                            handler.post(runnableUi);
                        }
                    }).start();
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String tag = editText.getText().toString();
                 RequestBody requestBodyPost = new FormBody.Builder().add("pid", "6").add("tag", tag).build();
-                Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPost).build();
+                Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPost).build();
                 okHttpClient.newCall(requestPost).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {

@@ -1,17 +1,24 @@
 package com.example.finalproject.entity;
 
 public class History {
-    private int imageid;
-    private String tags;
+    private String imageid;
+    private String[] tags;
 
-    public History(int imageid,String tags){
-        this.imageid=imageid;
-        this.tags=tags;
+    public History(String imageid, String[] tags) {
+        this.imageid = imageid;
+        this.tags = tags;
     }
-    public int getImageid(){
+
+    public String getImageid() {
         return imageid;
     }
-    public String getTags(){
+    public void setImageid(String imageid) {
+        this.imageid = imageid;
+    }
+    public String[] getTags() {
         return tags;
+    }
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 }

@@ -38,7 +38,7 @@ public class TaggingActivity extends AppCompatActivity {
     private static OkHttpClient okHttpClient;
     private static Handler handler;
     private static Runnable runnableUi;
-    private static String url = "http://115.159.188.200:8001/";
+    private static String url = "http://114.115.212.203:8001/";
     private static Uri uri;
     private static String pid;
 
@@ -144,7 +144,7 @@ public class TaggingActivity extends AppCompatActivity {
                         System.out.println("+++++++++++");
                         System.out.println(username + " " + password);
                         RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
-                        Request requestPost = new Request.Builder().url("http://115.159.188.200:8001/do_login/").post(requestBodyPost).build();
+                        Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -156,7 +156,7 @@ public class TaggingActivity extends AppCompatActivity {
                             }
                         });
 
-                        Request requestImg = new Request.Builder().url("http://115.159.188.200:8001/getPic/").build();
+                        Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
                         Response responseImg = null;
                         try {
                             responseImg = okHttpClient.newCall(requestImg).execute();
@@ -177,17 +177,17 @@ public class TaggingActivity extends AppCompatActivity {
                         url = pic.get("url").getAsString();
                         System.out.println(pid + " " + url);
 
-                        uri = Uri.parse("http://115.159.188.200:8001" + url);
+                        uri = Uri.parse("http://114.115.212.203:8001" + url);
                         handler.post(runnableUi);
 
 //                        String postBody = "{\"type\":\"\"}";
 //                        RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
-//                        Request requestPostTag = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPostTag)
+//                        Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag)
 //                                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
                         System.out.println("*******************" + BI1.getText() + BI2.getText() + BI3.getText() + BI4.getText() + BI5.getText() + BI6.getText());
                         String tag = BI5.getText().toString();
                         RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", "111,222,333").build();
-                        Request requestPostTag = new Request.Builder().url("http://115.159.188.200:8001/tagit/").post(requestBodyPostTag).build();
+                        Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag).build();
 
                         okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
                             @Override
