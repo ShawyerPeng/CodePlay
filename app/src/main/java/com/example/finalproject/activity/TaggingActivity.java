@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,7 +42,7 @@ import okhttp3.Response;
 
 import static com.example.finalproject.R.id.my_image_view;
 
-public class TaggingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class TaggingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, GestureDetector.OnGestureListener {
     private static ClearableCookieJar cookieJar;
     private static OkHttpClient okHttpClient;
     private static Handler handler;
@@ -58,6 +60,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
     private int tag_num = 0;
     private List<Menu> menulist = new ArrayList<>();
     private Stack<Button> buttonStack = new Stack<Button>();
+    private static GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,18 +132,18 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
             startActivity(intent);
         }
 
+        gestureDetector = new GestureDetector(this);
         handler = new Handler();
         runnableUi = new Runnable(){
             @Override
             public void run() {
                 draweeView = (SimpleDraweeView) findViewById(my_image_view);
                 draweeView.setImageURI(uri);
-                draweeView.setOnClickListener(new View.OnClickListener() {
+                // 点击查看图片和滑动切换图片的触发事件
+                draweeView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view){
-                        Intent intent = new Intent(TaggingActivity.this, ImageViewActivity.class);
-                        intent.putExtra("img_url", to_url);
-                        startActivity(intent);
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return gestureDetector.onTouchEvent(event);
                     }
                 });
             }
@@ -537,5 +540,64 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         }
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Intent intent = new Intent(TaggingActivity.this, ImageViewActivity.class);
+        intent.putExtra("img_url", to_url);
+        startActivity(intent);
+        return false;
+    }
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (e1.getX() - e2.getX() > 10 && Math.abs(velocityX) > 0) {
+            new Thread(new Runnable() {
+                public void run() {
+                    Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
+                    Response responseImg = null;
+                    try {
+                        responseImg = okHttpClient.newCall(requestImg).execute();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String bodyImg = null;
+                    try {
+                        bodyImg = responseImg.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(bodyImg);
+
+                    JsonParser parser = new JsonParser();
+                    JsonObject pic = parser.parse(bodyImg).getAsJsonObject();
+                    pid = pic.get("pid").getAsString();
+                    url = pic.get("url").getAsString();
+                    to_url = "http://114.115.212.203:8001" + url;
+                    uri = Uri.parse(to_url);
+
+                    handler.post(runnableUi);
+                }
+            }).start();
+        } if (e2.getX() - e1.getX() > 10 && Math.abs(velocityX) > 0) {
+            Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 }

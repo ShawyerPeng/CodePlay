@@ -65,11 +65,5 @@ public class ImageViewActivity extends AppCompatActivity {
                 finish();
             }
         });
-        mPhotoDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return false;
-            }
-        });
     }
 }
