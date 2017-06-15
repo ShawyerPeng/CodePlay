@@ -8,7 +8,6 @@ import android.webkit.WebViewClient;
 import com.example.finalproject.R;
 
 public class RegisterActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

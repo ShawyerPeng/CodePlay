@@ -15,6 +15,7 @@ import java.util.List;
 
 public class MenuAdapter extends ArrayAdapter<Menu> {
     private int resourceId;
+
     public MenuAdapter(Context  context, int textViewResourceId, List<Menu> object){
         super(context,textViewResourceId,object);
         resourceId = textViewResourceId;

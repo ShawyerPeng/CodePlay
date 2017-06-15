@@ -47,13 +47,9 @@ public class HistoryActivity extends Activity {
     private static ArrayList<History> historyArrayList;
     private static int pos;
 
-
     private static HistoryAdapter adapter;
     private static Vector<History> list = new Vector<History>();
-
     ListView listView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

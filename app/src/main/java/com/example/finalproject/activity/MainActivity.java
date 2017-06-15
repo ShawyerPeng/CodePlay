@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 创建属于主线程的handler
         handler = new Handler();
-
         runnableUi = new Runnable(){
             @Override
             public void run() {

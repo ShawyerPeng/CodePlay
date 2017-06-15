@@ -1,11 +1,8 @@
 package com.example.finalproject.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,10 +32,6 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
     private static ClearableCookieJar cookieJar;
     private static OkHttpClient okHttpClient;
-    private static Handler handler;
-    private static Runnable runnableUi;
-    private static String url = "http://114.115.212.203:8001/";
-    private static Uri uri;
 
     private static SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -53,13 +46,20 @@ public class LoginActivity extends AppCompatActivity {
         final EditText input_password = (EditText)findViewById(R.id.login_password_edit);
         Button button_login = (Button)findViewById(R.id.login_login_btn);
 
-        sharedPreferences = this.getSharedPreferences("data", Activity.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("isRemember", true)) {
-            input_username.setText(sharedPreferences.getString("username", ""));
-            input_password.setText(sharedPreferences.getString("password", ""));
-
-            btn_login();
-            this.finish();
+        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        if (!(getSharedPreferences("data", MODE_PRIVATE) == null)) {
+            if (sharedPreferences.getBoolean("isRemember", false)) {
+                input_username.setText(sharedPreferences.getString("username", ""));
+                input_password.setText(sharedPreferences.getString("password", ""));
+                btn_login();
+                this.finish();
+            }
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("username", null);
+            editor.putString("password", null);
+            editor.putBoolean("isRemember", false);
+            editor.commit();
         }
 
         button_login.setOnClickListener(new View.OnClickListener() {
@@ -85,15 +85,14 @@ public class LoginActivity extends AppCompatActivity {
                                 if(message.equals("ok")) {
                                     // 保存用户名及密码
                                     sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                                    editor = getSharedPreferences("data", MODE_PRIVATE).edit();
                                     editor.putString("username", username);
                                     editor.putString("password", password);
                                     editor.putBoolean("isRemember", true);
-                                    editor.commit();
+                                    editor.apply();
 
                                     System.out.println(sharedPreferences.getString("username", username));
                                     System.out.println(sharedPreferences.getString("password", password));
-                                    System.out.println("---------------");
 
                                     btn_login();
                                 } else {
@@ -107,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                 }).start();
             }
         });
-
     }
 
     public void btn_login() {
@@ -115,5 +113,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
-
 }

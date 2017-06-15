@@ -111,8 +111,6 @@ public class UserInfActivity extends AppCompatActivity {
                 sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
                 String username = sharedPreferences.getString("username", null);
                 String password = sharedPreferences.getString("password", null);
-                System.out.println("+++++++++++");
-                System.out.println(username + " " + password);
                 RequestBody requestBodyPost = new FormBody.Builder().add("name", username).add("pwd", password).build();
                 Request requestPost = new Request.Builder().url("http://114.212.203:8001/do_login/").post(requestBodyPost).build();
                 okHttpClient.newCall(requestPost).enqueue(new Callback() {

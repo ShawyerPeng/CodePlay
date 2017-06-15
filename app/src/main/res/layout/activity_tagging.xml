@@ -281,13 +281,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#E0EEE0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:src="@drawable/logo" />
 
         <TextView
@@ -296,34 +296,43 @@
             android:layout_gravity="center"
             android:text="username"
             android:textSize="20sp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="积分：100     诚信值：100" />
 
+        <ListView
+            android:id="@+id/menu_listview"
+            android:layout_width="match_parent"
+            android:layout_height="340dp"
+            android:layout_marginTop="40dp"
+            android:divider="#00000000"
+            android:dividerHeight="20dp">
+        </ListView>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="普通图片"/>
-
-            <com.kyleduo.switchbutton.SwitchButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:text="夜间模式"
+                android:gravity="center"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_gravity="bottom">
-
+            android:layout_marginTop="10dp"
+            android:layout_gravity="bottom"
+            android:gravity="bottom">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

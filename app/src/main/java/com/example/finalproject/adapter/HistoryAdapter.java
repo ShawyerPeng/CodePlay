@@ -16,9 +16,9 @@ import java.util.Vector;
 import me.gujun.android.taggroup.TagGroup;
 
 public class HistoryAdapter extends BaseAdapter {
-    LayoutInflater inflater;
-    Vector<History> list;
-    History history;
+    private LayoutInflater inflater;
+    private Vector<History> list;
+    private History history;
 
     @Override
     public int getCount() {
@@ -29,6 +29,7 @@ public class HistoryAdapter extends BaseAdapter {
         this.list = list;
         inflater = LayoutInflater.from(context);
     }
+
     @Override
     public Object getItem(int position) {
         return list.get(position);
@@ -44,10 +45,10 @@ public class HistoryAdapter extends BaseAdapter {
         View view = inflater.inflate(R.layout.history_item, null);
         history = list.get(position);
 
-//        TextView textView = (TextView) view.findViewById(R.id.History_tags);
-//        textView.setText(history.getTags());
-//        SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.History_image);
-//        draweeView.setImageURI(Uri.parse(history.getImageid()).toString());
+        // TextView textView = (TextView) view.findViewById(R.id.History_tags);
+        // textView.setText(history.getTags());
+        // SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.History_image);
+        // draweeView.setImageURI(Uri.parse(history.getImageid()).toString());
 
         ImageView imageView = (ImageView) view.findViewById(R.id.History_image);
         Glide.with(view).load(history.getImageid()).into(imageView);

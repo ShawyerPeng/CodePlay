@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.finalproject.R;
 
 public class FeedbackActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
