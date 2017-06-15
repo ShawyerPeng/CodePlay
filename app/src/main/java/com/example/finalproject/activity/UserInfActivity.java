@@ -48,6 +48,7 @@ public class UserInfActivity extends AppCompatActivity {
     private static String url = "http://114.115.212.203:8001/";
     private static Uri uri;
     private static String pid;
+    private static boolean isEditing;
 
     Vector<Map<String,Object>> list=new Vector<Map<String, Object>>();
     private static String username;
@@ -66,7 +67,6 @@ public class UserInfActivity extends AppCompatActivity {
 
         EditText UserInf = (EditText)findViewById(R.id.UserInf);
         Button btn_edit_info = (Button)findViewById(R.id.btn_edit_info);
-        Button btn_edit_submit = (Button)findViewById(R.id.btn_edit_submit);
 
         handler = new Handler();
         final UserInfAdapter adapter = new UserInfAdapter(this);
@@ -82,24 +82,25 @@ public class UserInfActivity extends AppCompatActivity {
         btn_edit_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.get(2).put("isEditable", "true");
-                list.get(3).put("isEditable", "true");
-                list.get(4).put("isEditable", "true");
-                list.get(5).put("isEditable", "true");
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        btn_edit_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO 上传修改后的文本到服务器
-                HashMap text = (HashMap)listView.getItemAtPosition(3);
-                System.out.println(text.get("inf"));
-                for(int i=0; i<list.size(); i++) {
-                    list.get(i).put("isEditable", "false");
+                System.out.println(isEditing);
+                if (!isEditing) {
+                    list.get(2).put("isEditable", "true");
+                    list.get(3).put("isEditable", "true");
+                    list.get(4).put("isEditable", "true");
+                    list.get(5).put("isEditable", "true");
+                    adapter.notifyDataSetChanged();
+                    isEditing = true;
+                } else {
+                    // TODO 上传修改后的文本到服务器
+                    HashMap text = (HashMap)listView.getItemAtPosition(3);
+                    System.out.println(text.get("inf"));
+                    for(int i=0; i<list.size(); i++) {
+                        list.get(i).put("isEditable", "false");
+                    }
+                    adapter.notifyDataSetChanged();
+                    isEditing = false;
                 }
-                adapter.notifyDataSetChanged();
+
             }
         });
 
