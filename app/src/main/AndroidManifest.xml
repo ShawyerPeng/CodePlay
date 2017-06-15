@@ -28,8 +28,8 @@
         <activity android:name=".activity.HistoryActivity" />
         <activity
             android:name=".activity.ImageViewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".activity.SettingActivity"/>
     </application>
 
 </manifest>

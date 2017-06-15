@@ -9,25 +9,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.finalproject.R;
+import com.example.finalproject.activity.TaggingActivity;
 import com.example.finalproject.entity.Menu;
 
 import java.util.List;
 
 public class MenuAdapter extends ArrayAdapter<Menu> {
     private int resourceId;
+    private TaggingActivity taggingActivity;
 
-    public MenuAdapter(Context  context, int textViewResourceId, List<Menu> object){
-        super(context,textViewResourceId,object);
+    public MenuAdapter(Context context, int textViewResourceId, List<Menu> object){
+        super(context, textViewResourceId, object);
         resourceId = textViewResourceId;
+        taggingActivity = (TaggingActivity) context;
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        Menu menu = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
-        ImageView menuimage= (ImageView) view.findViewById(R.id.menu_ico);
+
+        Menu menu = getItem(position);
+        ImageView menuimage = (ImageView) view.findViewById(R.id.menu_ico);
         TextView menuname = (TextView) view.findViewById(R.id.menu_name);
         menuimage.setImageResource(menu.getImageid());
         menuname.setText(menu.getName());
+
         return view;
     }
 }

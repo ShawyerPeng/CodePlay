@@ -67,11 +67,11 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tagging);
 
-        menulist.add(new Menu("用户信息",R.drawable.ic_menu_friendslist));
+        menulist.add(new Menu("用户信息", R.drawable.ic_menu_friendslist));
         menulist.add(new Menu("历史记录",R.drawable.ic_menu_recent_history));
         menulist.add(new Menu("注销账号",R.drawable.ic_menu_blocked_user));
         menulist.add(new Menu("退出",R.drawable.ic_menu_back));
-        MenuAdapter adapter = new MenuAdapter(this,R.layout.menu_item,menulist);
+        MenuAdapter adapter = new MenuAdapter(this, R.layout.menu_item, menulist);
         ListView listView = (ListView) findViewById(R.id.menu_listview);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -514,7 +514,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
     }
 
     public void btn_feedback(View v){
-        Intent intent = new Intent(TaggingActivity.this,FeedbackActivity.class);
+        Intent intent = new Intent(TaggingActivity.this, FeedbackActivity.class);
         Toast.makeText(this, "feedback", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
