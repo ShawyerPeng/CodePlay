@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -39,25 +38,29 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.finalproject.R.id.my_image_view;
+
 public class TaggingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private static ClearableCookieJar cookieJar;
     private static OkHttpClient okHttpClient;
     private static Handler handler;
     private static Runnable runnableUi;
     private static String url = "http://114.115.212.203:8001/";
+    private static String to_url;
     private static Uri uri;
     private static String pid;
 
-    private static SharedPreferences sharedPreferences = null;
+    private static SharedPreferences sharedPreferences;
 
     private Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_add,b_sub;
+    private static SimpleDraweeView draweeView;
     private EditText input_tag;
     private int tag_num = 0;
     private List<Menu> menulist = new ArrayList<>();
     private Stack<Button> buttonStack = new Stack<Button>();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tagging);
 
@@ -119,21 +122,29 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         buttonStack.push(BI5);
         buttonStack.push(BI6);
 
-        handler = new Handler();
-        runnableUi = new Runnable(){
-            @Override
-            public void run() {
-                SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.my_image_view);
-                draweeView.setImageURI(uri);
-            }
-        };
-
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         if (sharedPreferences.getString("username", null)==null && sharedPreferences.getString("password", null)==null) {
             Intent intent = new Intent();
             intent.setClass(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        handler = new Handler();
+        runnableUi = new Runnable(){
+            @Override
+            public void run() {
+                draweeView = (SimpleDraweeView) findViewById(my_image_view);
+                draweeView.setImageURI(uri);
+                draweeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view){
+                        Intent intent = new Intent(TaggingActivity.this, ImageViewActivity.class);
+                        intent.putExtra("img_url", to_url);
+                        startActivity(intent);
+                    }
+                });
+            }
+        };
 
         new Thread(new Runnable() {
             public void run() {
@@ -171,12 +182,12 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 JsonObject pic = parser.parse(bodyImg).getAsJsonObject();
                 pid = pic.get("pid").getAsString();
                 url = pic.get("url").getAsString();
-                uri = Uri.parse("http://114.115.212.203:8001" + url);
+                to_url = "http://114.115.212.203:8001" + url;
+                uri = Uri.parse(to_url);
 
                 handler.post(runnableUi);
             }
         }).start();
-
 
         b_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -266,9 +277,9 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                             JsonObject pic = parser.parse(bodyImg).getAsJsonObject();
                             pid = pic.get("pid").getAsString();
                             url = pic.get("url").getAsString();
-                            System.out.println(pid + " " + url);
-
+                            to_url = "http://114.115.212.203:8001" + url;
                             uri = Uri.parse("http://114.115.212.203:8001" + url);
+
                             handler.post(runnableUi);
 
                             // String postBody = "{\"type\":\"\"}";
@@ -284,7 +295,6 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                                 public void onFailure(Call call, IOException e) {
                                     Log.e("TaggingActivity", "上传标签失败！");
                                 }
-
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
                                     Log.e("TaggingActivity", "tag:" + response.body().string());
@@ -452,62 +462,50 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         BI1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI1.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI1);
-                }
 
             }
         });
         BI2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI2.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI2);
-                }
             }
         });
         BI3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI3.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI3);
-                }
             }
         });
         BI4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI4.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI4);
-                }
             }
         });
         BI5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI5.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI5);
-                }
             }
         });
         BI6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
                     BI6.setVisibility(View.GONE);
                     tag_num--;
                     buttonStack.push(BI6);
-                }
             }
         });
     }

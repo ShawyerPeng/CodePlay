@@ -31,7 +31,8 @@
             android:layout_height="0dp"
             android:layout_weight="1.5"
             android:padding="5dp"
-            fresco:placeholderImage="@drawable/layout_border" />
+            android:clickable="true"
+            fresco:placeholderImage="@drawable/layout_border"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,13 +58,11 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp" />
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
                     <ScrollView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -73,19 +72,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
-
                             <Button
                                 android:id="@+id/btn_cankao1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="标签1" />
-
                             <Button
                                 android:id="@+id/btn_cankao3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="标签3" />
-
                             <Button
                                 android:id="@+id/btn_cankao5"
                                 android:layout_width="match_parent"
@@ -94,29 +90,24 @@
                         </LinearLayout>
                     </ScrollView>
 
-
                     <ScrollView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
-
                             <Button
                                 android:id="@+id/btn_cankao2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="标签2" />
-
                             <Button
                                 android:id="@+id/btn_cankao4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="标签4" />
-
                             <Button
                                 android:id="@+id/btn_cankao6"
                                 android:layout_width="match_parent"
@@ -158,7 +149,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="请输入标签" />
+                        android:hint="请输入标签"/>
 
                     <Button
                         android:id="@+id/btn_AddTag"
@@ -166,7 +157,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
                         android:text="添加" />
-
                     <Button
                         android:id="@+id/btn_SubmitTag"
                         android:layout_width="0dp"
@@ -181,42 +171,34 @@
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="5dp">
-
                     <ScrollView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
-
                             <Button
                                 android:id="@+id/btn_wode1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input3"
                                 android:layout_width="match_parent"
@@ -228,37 +210,30 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
-
                             <Button
                                 android:id="@+id/btn_wode2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode6"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
                             <Button
                                 android:id="@+id/btn_wode_input6"
                                 android:layout_width="match_parent"
@@ -271,7 +246,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
     </LinearLayout>
 
@@ -338,7 +312,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:text="设置" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
