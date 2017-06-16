@@ -306,6 +306,15 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                         }
                     }).start();
                     input_tag.setText(null);
+                    tag_num = 0;
+                    B1.setText(null);B2.setText(null);B3.setText(null);B4.setText(null);B5.setText(null);B6.setText(null);
+                    BI1.setText(null);BI2.setText(null);BI3.setText(null);BI4.setText(null);BI5.setText(null);BI6.setText(null);
+                    B1.setVisibility(View.GONE);B2.setVisibility(View.GONE);B3.setVisibility(View.GONE);
+                    B4.setVisibility(View.GONE);B5.setVisibility(View.GONE);B6.setVisibility(View.GONE);
+                    BI1.setVisibility(View.GONE);BI2.setVisibility(View.GONE);BI3.setVisibility(View.GONE);
+                    BI4.setVisibility(View.GONE);BI5.setVisibility(View.GONE);BI6.setVisibility(View.GONE);
+                    b1.setVisibility(View.VISIBLE);b2.setVisibility(View.VISIBLE);b3.setVisibility(View.VISIBLE);
+                    b4.setVisibility(View.VISIBLE);b5.setVisibility(View.VISIBLE);b6.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(TaggingActivity.this, "标签为空，请添加后提交", Toast.LENGTH_SHORT).show();
                 }
@@ -315,52 +324,45 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!b1.getText().equals("")) {
-                    if (tag_num >= 6) {
-                        Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    b1.setVisibility(View.GONE);
-                    B1.setVisibility(View.VISIBLE);
-                    B1.setText(b1.getText());
-                    tag_num++;
+                if (tag_num >= 6) {
+                    Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                b1.setVisibility(View.GONE);
+                B1.setVisibility(View.VISIBLE);
+                B1.setText(b1.getText());
+                tag_num++;
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!b2.getText().equals("")) {
-                    if (tag_num>=6){
-                        Toast.makeText(getApplicationContext(),"最多添加6个标签！",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    b2.setVisibility(View.GONE);
-                    B2.setVisibility(View.VISIBLE);
-                    B2.setText(b2.getText());
-                    tag_num++;
+                if (tag_num>=6){
+                    Toast.makeText(getApplicationContext(),"最多添加6个标签！",Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                b2.setVisibility(View.GONE);
+                B2.setVisibility(View.VISIBLE);
+                B2.setText(b2.getText());
+                tag_num++;
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!b3.getText().equals("")) {
-                    if (tag_num >= 6) {
-                        Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    b3.setVisibility(View.GONE);
-                    B3.setVisibility(View.VISIBLE);
-                    B3.setText(b3.getText());
-                    tag_num++;
+                if (tag_num >= 6) {
+                    Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                b3.setVisibility(View.GONE);
+                B3.setVisibility(View.VISIBLE);
+                B3.setText(b3.getText());
+                tag_num++;
             }
         });
         b4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!b4.getText().equals("")) {
+                @Override
+                public void onClick(View v) {
                     if (tag_num >= 6) {
                         Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
                         return;
@@ -370,145 +372,141 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                     B4.setText(b4.getText());
                     tag_num++;
                 }
-            }
         });
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!b5.getText().equals("")) {
-                    if (tag_num >= 6) {
-                        Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    b5.setVisibility(View.GONE);
-                    B5.setVisibility(View.VISIBLE);
-                    B5.setText(b5.getText());
-                    tag_num++;
+                if (tag_num >= 6) {
+                    Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                b5.setVisibility(View.GONE);
+                B5.setVisibility(View.VISIBLE);
+                B5.setText(b5.getText());
+                tag_num++;
             }
         });
         b6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!b6.getText().equals("")) {
-                    if (tag_num >= 6) {
-                        Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    b6.setVisibility(View.GONE);
-                    B6.setVisibility(View.VISIBLE);
-                    B6.setText(b6.getText());
-                    tag_num++;
+                if (tag_num >= 6) {
+                    Toast.makeText(getApplicationContext(), "最多添加6个标签！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                b6.setVisibility(View.GONE);
+                B6.setVisibility(View.VISIBLE);
+                B6.setText(b6.getText());
+                tag_num++;
             }
         });
         B1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
-                    b1.setVisibility(View.VISIBLE);
-                    B1.setVisibility(View.GONE);
-                    tag_num--;
-                }
+                B1.setText(null);
+                b1.setVisibility(View.VISIBLE);
+                B1.setVisibility(View.GONE);
+                tag_num--;
+
             }
         });
         B2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
-                    b2.setVisibility(View.VISIBLE);
-                    B2.setVisibility(View.GONE);
-                    tag_num--;
-                }
+                B2.setText(null);
+                b2.setVisibility(View.VISIBLE);
+                B2.setVisibility(View.GONE);
+                tag_num--;
+
             }
         });
         B3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
-                    b3.setVisibility(View.VISIBLE);
-                    B3.setVisibility(View.GONE);
-                    tag_num--;
-                }
+                B3.setText(null);
+                b3.setVisibility(View.VISIBLE);
+                B3.setVisibility(View.GONE);
+                tag_num--;
             }
         });
         B4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
+                B4.setText(null);
                     b4.setVisibility(View.VISIBLE);
                     B4.setVisibility(View.GONE);
                     tag_num--;
-                }
             }
         });
         B5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
-                    b5.setVisibility(View.VISIBLE);
-                    B5.setVisibility(View.GONE);
-                    tag_num--;
-                }
+                B5.setText(null);
+                b5.setVisibility(View.VISIBLE);
+                B5.setVisibility(View.GONE);
+                tag_num--;
             }
         });
         B6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!B1.getText().equals("")) {
-                    b6.setVisibility(View.VISIBLE);
-                    B6.setVisibility(View.GONE);
-                    tag_num--;
-                }
+                B6.setText(null);
+                b6.setVisibility(View.VISIBLE);
+                B6.setVisibility(View.GONE);
+                tag_num--;
             }
         });
         BI1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI1.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI1);
-
+                BI1.setText(null);
+                BI1.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI1);
             }
         });
         BI2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI2.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI2);
+                BI2.setText(null);
+                BI2.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI2);
             }
         });
         BI3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI3.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI3);
+                BI3.setText(null);
+                BI3.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI3);
             }
         });
         BI4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI4.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI4);
+                BI4.setText(null);
+                BI4.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI4);
             }
         });
         BI5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI5.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI5);
+                BI5.setText(null);
+                BI5.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI5);
             }
         });
         BI6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    BI6.setVisibility(View.GONE);
-                    tag_num--;
-                    buttonStack.push(BI6);
+                BI6.setText(null);
+                BI6.setVisibility(View.GONE);
+                tag_num--;
+                buttonStack.push(BI6);
             }
         });
     }
@@ -535,6 +533,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
             sharedPreferences.edit().clear().apply();
             intent.setClass(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
         else if (position == 3) {
             android.os.Process.killProcess(android.os.Process.myPid());
