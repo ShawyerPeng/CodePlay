@@ -50,7 +50,7 @@ public class UserInfAdapter extends BaseAdapter {
         TextView name = (TextView) view.findViewById(R.id.UserInfName);
         EditText inf = (EditText) view.findViewById(R.id.UserInf);
         name.setText((String)map.get("name"));
-        inf.setText((String)map.get("inf"));
+        inf.setText(map.get("inf").toString());
 
         if ((map.get("isEditable")).equals("true")) {
             inf.setEnabled(true);

@@ -258,23 +258,32 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <ImageView
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/logo" />-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/logo" />
+            android:clickable="true"
+            fresco:roundAsCircle="true"
+            fresco:placeholderImage="@drawable/layout_border"/>
 
         <TextView
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="username"
             android:textSize="20sp" />
         <TextView
+            android:id="@+id/honesty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="积分：100     诚信值：100" />
+            android:textSize="17sp"/>
 
         <ListView
             android:id="@+id/menu_listview"
@@ -311,7 +320,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:text="设置" />
+                android:text="设置"
+                android:clickable="true"
+                android:onClick="btn_setting"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

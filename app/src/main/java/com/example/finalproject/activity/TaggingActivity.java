@@ -14,16 +14,19 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.finalproject.R;
 import com.example.finalproject.adapter.MenuAdapter;
 import com.example.finalproject.entity.Menu;
+import com.example.finalproject.entity.User;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -49,6 +52,9 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
     private static Runnable runnableUi;
     private static String url = "http://114.115.212.203:8001/";
     private static String to_url;
+    private static String avatar_url;
+    private static String _username;
+    private static double _honesty;
     private static Uri uri;
     private static String pid;
 
@@ -56,6 +62,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
 
     private Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_add,b_sub;
     private static SimpleDraweeView draweeView;
+    private static SimpleDraweeView avatar;
     private EditText input_tag;
     private int tag_num = 0;
     private List<Menu> menulist = new ArrayList<>();
@@ -137,6 +144,13 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         runnableUi = new Runnable(){
             @Override
             public void run() {
+                avatar = (SimpleDraweeView) findViewById(R.id.avatar);
+                avatar.setImageURI(Uri.parse("http://114.115.212.203:8001" + avatar_url));
+                TextView username = (TextView) findViewById(R.id.username) ;
+                TextView honesty = (TextView) findViewById(R.id.honesty);
+                username.setText("用户名：" + _username);
+                honesty.setText("诚信值：" + Double.toString(_honesty));
+
                 draweeView = (SimpleDraweeView) findViewById(my_image_view);
                 draweeView.setImageURI(uri);
                 // 点击查看图片和滑动切换图片的触发事件
@@ -187,6 +201,30 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 url = pic.get("url").getAsString();
                 to_url = "http://114.115.212.203:8001" + url;
                 uri = Uri.parse(to_url);
+
+                Request requestInfo = new Request.Builder().url("http://114.115.212.203:8001/info/").build();
+                Response responseInfo = null;
+                try {
+                    responseInfo = okHttpClient.newCall(requestInfo).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String bodyInfo = null;
+                try {
+                    bodyInfo = responseInfo.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(bodyInfo);
+
+                Gson gson = new Gson();
+                JsonObject object = new JsonParser().parse(bodyInfo).getAsJsonObject();
+                JsonObject user = object.getAsJsonObject("user");
+                User aUser = gson.fromJson(user, User.class);
+                System.out.println(aUser.toString());
+                avatar_url = aUser.getFaceurl();
+                _username = aUser.getUname();
+                _honesty = aUser.getUhonesty();
 
                 handler.post(runnableUi);
             }
@@ -513,7 +551,11 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
 
     public void btn_feedback(View v){
         Intent intent = new Intent(TaggingActivity.this, FeedbackActivity.class);
-        Toast.makeText(this, "feedback", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+    }
+
+    public void btn_setting(View v){
+        Intent intent = new Intent(TaggingActivity.this, SettingActivity.class);
         startActivity(intent);
     }
 
@@ -595,7 +637,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 }
             }).start();
         } if (e2.getX() - e1.getX() > 10 && Math.abs(velocityX) > 0) {
-            Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
         }
         return false;
     }

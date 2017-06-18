@@ -51,12 +51,18 @@ public class UserInfActivity extends AppCompatActivity {
     private static boolean isEditing;
 
     Vector<Map<String,Object>> list=new Vector<Map<String, Object>>();
-    private static String username;
-    private static String id;
-    private static String email;
-    private static String phone;
-    private static String career;
-    private static String birthday;
+    private String faceurl;
+    private String uname;
+    private String urealname;
+    private String uemail;
+    private String utel;
+    private String uidcard;
+    private String usex;
+    private String uindentity;
+    private double uhonesty;
+    private int uyear;
+    private int umonth;
+    private int uday;
 
     private ListView listView;
 
@@ -66,7 +72,7 @@ public class UserInfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_inf);
 
         EditText UserInf = (EditText)findViewById(R.id.UserInf);
-        Button btn_edit_info = (Button)findViewById(R.id.btn_edit_info);
+        final Button btn_edit_info = (Button)findViewById(R.id.btn_edit_info);
 
         handler = new Handler();
         final UserInfAdapter adapter = new UserInfAdapter(this);
@@ -88,8 +94,10 @@ public class UserInfActivity extends AppCompatActivity {
                     list.get(3).put("isEditable", "true");
                     list.get(4).put("isEditable", "true");
                     list.get(5).put("isEditable", "true");
+                    list.get(6).put("isEditable", "true");
                     adapter.notifyDataSetChanged();
                     isEditing = true;
+                    btn_edit_info.setText("保存");
                 } else {
                     // TODO 上传修改后的文本到服务器
                     HashMap text = (HashMap)listView.getItemAtPosition(3);
@@ -99,6 +107,7 @@ public class UserInfActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                     isEditing = false;
+                    btn_edit_info.setText("编辑");
                 }
 
             }
@@ -162,47 +171,53 @@ public class UserInfActivity extends AppCompatActivity {
                     System.out.println(tag.getTag() + "      " + tag.getFrequent());
                 }
 
-                username = aUser.getUname();
-                id = aUser.getUhonesty();
-                email = aUser.getUemail();
-                phone = aUser.getUsex();
-                career = aUser.getUindentity();
-                birthday = aUser.getUhonesty();
-
+                uname = aUser.getUname();
+                urealname = aUser.getUrealname();
+                uidcard = aUser.getUidcard();
+                uemail = aUser.getUemail();
+                utel = aUser.getUtel();
+                uindentity = aUser.getUindentity();
+                uhonesty = aUser.getUhonesty();
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("name", "用户名:");
-                map.put("inf", username);
+                map.put("inf", uname);
+                map.put("isEditable", "false");
+                list.add(map);
+
+                map = new HashMap<String, Object>();
+                map.put("name", "诚信值:");
+                map.put("inf", uhonesty);
+                map.put("isEditable", "false");
+                list.add(map);
+
+                map = new HashMap<String, Object>();
+                map.put("name", "姓名:");
+                map.put("inf", urealname);
                 map.put("isEditable", "false");
                 list.add(map);
 
                 map = new HashMap<String, Object>();
                 map.put("name", "身份证号:");
-                map.put("inf", id);
+                map.put("inf", uidcard);
                 map.put("isEditable", "false");
                 list.add(map);
 
                 map = new HashMap<String, Object>();
                 map.put("name", "邮箱:");
-                map.put("inf", email);
+                map.put("inf", uemail);
                 map.put("isEditable", "false");
                 list.add(map);
 
                 map = new HashMap<String, Object>();
                 map.put("name", "电话:");
-                map.put("inf", phone);
+                map.put("inf", utel);
                 map.put("isEditable", "false");
                 list.add(map);
 
                 map = new HashMap<String, Object>();
                 map.put("name", "职业:");
-                map.put("inf", career);
-                map.put("isEditable", "false");
-                list.add(map);
-
-                map = new HashMap<String, Object>();
-                map.put("name", "生日:");
-                map.put("inf", birthday);
+                map.put("inf", uindentity);
                 map.put("isEditable", "false");
                 list.add(map);
 
