@@ -29,10 +29,11 @@
             android:id="@+id/my_image_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1.1"
             android:padding="5dp"
             android:clickable="true"
-            fresco:placeholderImage="@drawable/layout_border"/>
+            fresco:placeholderImage="@drawable/loading"
+            fresco:actualImageScaleType="fitCenter"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,18 +76,15 @@
                             <Button
                                 android:id="@+id/btn_cankao1"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签1" />
+                                android:layout_height="wrap_content"/>
                             <Button
                                 android:id="@+id/btn_cankao3"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签3" />
+                                android:layout_height="wrap_content"/>
                             <Button
                                 android:id="@+id/btn_cankao5"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签5" />
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
                     </ScrollView>
 
@@ -101,18 +99,15 @@
                             <Button
                                 android:id="@+id/btn_cankao2"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签2" />
+                                android:layout_height="wrap_content"/>
                             <Button
                                 android:id="@+id/btn_cankao4"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签4" />
+                                android:layout_height="wrap_content"/>
                             <Button
                                 android:id="@+id/btn_cankao6"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="标签6" />
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
                     </ScrollView>
 
@@ -143,27 +138,33 @@
                     android:orientation="horizontal"
                     android:focusable="true"
                     android:focusableInTouchMode="true">
-
                     <EditText
                         android:id="@+id/input_tag"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="请输入标签"/>
-
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
                     <Button
                         android:id="@+id/btn_AddTag"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:text="添加" />
+                        android:text="添加"/>
                     <Button
                         android:id="@+id/btn_SubmitTag"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:text="提交" />
+                        android:text="提交"/>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -270,7 +271,7 @@
             android:layout_gravity="center"
             android:clickable="true"
             fresco:roundAsCircle="true"
-            fresco:placeholderImage="@drawable/layout_border"/>
+            fresco:placeholderImage="@drawable/loading"/>
 
         <TextView
             android:id="@+id/username"

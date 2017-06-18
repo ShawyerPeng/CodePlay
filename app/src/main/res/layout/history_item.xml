@@ -12,7 +12,7 @@
         <!--android:layout_height="100dp"-->
         <!--android:layout_weight="1.5"-->
         <!--android:padding="5dp"-->
-        <!--fresco:placeholderImage="@drawable/loadingimage"/>-->
+        <!--fresco:placeholderImage="@drawable/loading"/>-->
 
     <!--<TextView-->
         <!--android:id="@+id/History_tags"-->

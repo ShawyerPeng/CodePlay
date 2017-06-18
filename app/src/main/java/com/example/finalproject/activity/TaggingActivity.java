@@ -27,6 +27,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -46,21 +47,22 @@ import okhttp3.Response;
 import static com.example.finalproject.R.id.my_image_view;
 
 public class TaggingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, GestureDetector.OnGestureListener {
+    private static SharedPreferences sharedPreferences;
     private static ClearableCookieJar cookieJar;
     private static OkHttpClient okHttpClient;
     private static Handler handler;
+    private static Runnable init_runnableUi;
     private static Runnable runnableUi;
     private static String url = "http://114.115.212.203:8001/";
     private static String to_url;
     private static String avatar_url;
-    private static String _username;
-    private static double _honesty;
     private static Uri uri;
     private static String pid;
+    private static JsonArray tags;
+    private static String _username;
+    private static double _honesty;
 
-    private static SharedPreferences sharedPreferences;
-
-    private Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_add,b_sub;
+    private static Button b1,b2,b3,b4,b5,b6,B1,B2,B3,B4,B5,B6,BI1,BI2,BI3,BI4,BI5,BI6,b_add,b_sub;
     private static SimpleDraweeView draweeView;
     private static SimpleDraweeView avatar;
     private EditText input_tag;
@@ -104,7 +106,6 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         input_tag = (EditText) findViewById(R.id.input_tag);
         b_add = (Button) findViewById(R.id.btn_AddTag);
         b_sub = (Button) findViewById(R.id.btn_SubmitTag);
-
         B1.setVisibility(View.GONE);
         B2.setVisibility(View.GONE);
         B3.setVisibility(View.GONE);
@@ -117,14 +118,6 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         BI4.setVisibility(View.GONE);
         BI5.setVisibility(View.GONE);
         BI6.setVisibility(View.GONE);
-
-        b1.setText("标签1");
-        b2.setText("标签2");
-        b3.setText("标签3");
-        b4.setText("标签4");
-        b5.setText("标签5");
-        b6.setText("标签6");
-
         buttonStack.push(BI1);
         buttonStack.push(BI2);
         buttonStack.push(BI3);
@@ -141,7 +134,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
 
         gestureDetector = new GestureDetector(this);
         handler = new Handler();
-        runnableUi = new Runnable(){
+        init_runnableUi = new Runnable(){
             @Override
             public void run() {
                 avatar = (SimpleDraweeView) findViewById(R.id.avatar);
@@ -160,6 +153,41 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                         return gestureDetector.onTouchEvent(event);
                     }
                 });
+
+                ArrayList<Button> buttons = new ArrayList<>();
+                buttons.add(b1);buttons.add(b2);buttons.add(b3);buttons.add(b4);buttons.add(b5);buttons.add(b6);
+                buttons.get(0).setVisibility(View.GONE);buttons.get(1).setVisibility(View.GONE);buttons.get(2).setVisibility(View.GONE);
+                buttons.get(3).setVisibility(View.GONE);buttons.get(4).setVisibility(View.GONE);buttons.get(5).setVisibility(View.GONE);
+                for (int i=0; i<6; i++) {
+                    if(i<tags.size()) {
+                        buttons.get(i).setText(tags.get(i).getAsString());
+                        buttons.get(i).setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        };
+        runnableUi = new Runnable(){
+            @Override
+            public void run() {
+                draweeView = (SimpleDraweeView) findViewById(my_image_view);
+                draweeView.setImageURI(uri);
+                draweeView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return gestureDetector.onTouchEvent(event);
+                    }
+                });
+
+                ArrayList<Button> buttons = new ArrayList<>();
+                buttons.add(b1);buttons.add(b2);buttons.add(b3);buttons.add(b4);buttons.add(b5);buttons.add(b6);
+                buttons.get(0).setVisibility(View.GONE);buttons.get(1).setVisibility(View.GONE);buttons.get(2).setVisibility(View.GONE);
+                buttons.get(3).setVisibility(View.GONE);buttons.get(4).setVisibility(View.GONE);buttons.get(5).setVisibility(View.GONE);
+                for (int i=0; i<6; i++) {
+                    if(i<tags.size()) {
+                        buttons.get(i).setText(tags.get(i).getAsString());
+                        buttons.get(i).setVisibility(View.VISIBLE);
+                    }
+                }
             }
         };
 
@@ -202,6 +230,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 to_url = "http://114.115.212.203:8001" + url;
                 uri = Uri.parse(to_url);
 
+                // 获取个人信息
                 Request requestInfo = new Request.Builder().url("http://114.115.212.203:8001/info/").build();
                 Response responseInfo = null;
                 try {
@@ -226,7 +255,25 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 _username = aUser.getUname();
                 _honesty = aUser.getUhonesty();
 
-                handler.post(runnableUi);
+                // 加载标签
+                Request request = new Request.Builder().url("http://114.115.212.203:8001/tags_by_id?pid=" + pid).get().build();
+                Response response = null;
+                try {
+                    response = okHttpClient.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                tags = null;
+                try {
+                    JsonObject object1 = new JsonParser().parse(response.body().string()).getAsJsonObject();
+                    tags = object1.getAsJsonArray("tags");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(tags);
+
+
+                handler.post(init_runnableUi);
             }
         }).start();
 
@@ -299,6 +346,23 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                                 }
                             });
 
+                            tag.delete(tag.length() - 1, tag.length());
+                            Log.e("Tag: ", tag.toString());
+                            RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag.toString()).build();
+                            Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag).build();
+                            okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    Log.e("TaggingActivity", "上传标签失败！");
+                                }
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    Log.e("TaggingActivity", "tag:" + response.body().string());
+                                }
+                            });
+
+                            handler.post(runnableUi);
+
                             Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
                             Response responseImg = null;
                             try {
@@ -322,25 +386,6 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                             uri = Uri.parse("http://114.115.212.203:8001" + url);
 
                             handler.post(runnableUi);
-
-                            // String postBody = "{\"type\":\"\"}";
-                            // RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag).build();
-                            // Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag)
-                            //        .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), postBody)).build();
-                            tag.delete(tag.length() - 1, tag.length());
-                            Log.e("Tag: ", tag.toString());
-                            RequestBody requestBodyPostTag = new FormBody.Builder().add("pid", pid).add("tag", tag.toString()).build();
-                            Request requestPostTag = new Request.Builder().url("http://114.115.212.203:8001/tagit/").post(requestBodyPostTag).build();
-                            okHttpClient.newCall(requestPostTag).enqueue(new Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    Log.e("TaggingActivity", "上传标签失败！");
-                                }
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    Log.e("TaggingActivity", "tag:" + response.body().string());
-                                }
-                            });
                         }
                     }).start();
                     input_tag.setText(null);
@@ -611,6 +656,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         if (e1.getX() - e2.getX() > 10 && Math.abs(velocityX) > 0) {
             new Thread(new Runnable() {
                 public void run() {
+                    // 加载图片
                     Request requestImg = new Request.Builder().url("http://114.115.212.203:8001/getPic/").build();
                     Response responseImg = null;
                     try {
@@ -633,11 +679,28 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                     to_url = "http://114.115.212.203:8001" + url;
                     uri = Uri.parse(to_url);
 
+                    // 加载标签
+                    Request request = new Request.Builder().url("http://114.115.212.203:8001/tags_by_id?pid=" + pid).get().build();
+                    Response response = null;
+                    try {
+                        response = okHttpClient.newCall(request).execute();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    tags = null;
+                    try {
+                        JsonObject object1 = new JsonParser().parse(response.body().string()).getAsJsonObject();
+                        tags = object1.getAsJsonArray("tags");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(tags);
+
                     handler.post(runnableUi);
                 }
             }).start();
         } if (e2.getX() - e1.getX() > 10 && Math.abs(velocityX) > 0) {
-//            Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+
         }
         return false;
     }
