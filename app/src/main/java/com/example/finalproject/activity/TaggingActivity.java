@@ -1,10 +1,23 @@
 package com.example.finalproject.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.renderscript.Type;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -21,6 +34,9 @@ import com.example.finalproject.R;
 import com.example.finalproject.adapter.MenuAdapter;
 import com.example.finalproject.entity.Menu;
 import com.example.finalproject.entity.User;
+import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -31,7 +47,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -71,6 +91,11 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
     private Stack<Button> buttonStack = new Stack<Button>();
     private static GestureDetector gestureDetector;
 
+    private static final int PHOTO_REQUEST = 1;
+    private static final int CAMERA_REQUEST = 2;
+    private static final int PHOTO_CLIP = 3;
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,13 +150,14 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         buttonStack.push(BI5);
         buttonStack.push(BI6);
 
-        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         if (sharedPreferences.getString("username", null)==null && sharedPreferences.getString("password", null)==null) {
             Intent intent = new Intent();
             intent.setClass(this, LoginActivity.class);
             startActivity(intent);
-        }
+        }        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
 
+
+        final Context context = this;
         gestureDetector = new GestureDetector(this);
         handler = new Handler();
         init_runnableUi = new Runnable(){
@@ -139,6 +165,13 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
             public void run() {
                 avatar = (SimpleDraweeView) findViewById(R.id.avatar);
                 avatar.setImageURI(Uri.parse("http://114.115.212.203:8001" + avatar_url));
+                avatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getPicFromPhoto();
+                        // getPicFromCamera();
+                    }
+                });
                 TextView username = (TextView) findViewById(R.id.username) ;
                 TextView honesty = (TextView) findViewById(R.id.honesty);
                 username.setText("用户名：" + _username);
@@ -166,6 +199,7 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                 }
             }
         };
+
         runnableUi = new Runnable(){
             @Override
             public void run() {
@@ -271,7 +305,6 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
                     e.printStackTrace();
                 }
                 System.out.println(tags);
-
 
                 handler.post(init_runnableUi);
             }
@@ -703,5 +736,147 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
 
         }
         return false;
+    }
+
+    private void getPicFromPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, PHOTO_REQUEST);
+    }
+
+    private void getPicFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 下面这句指定调用相机拍照后的照片存储的路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(
+                Environment.getExternalStorageDirectory(), "avatar.jpg")));
+        startActivityForResult(intent, CAMERA_REQUEST);
+    }
+
+    private void photoClip(Uri uri) {
+        // 调用系统中自带的图片剪裁
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        // 设置在开启的Intent中设置显示的VIEW可裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, PHOTO_CLIP);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CAMERA_REQUEST:
+                switch (resultCode) {
+                    case -1://-1表示拍照成功
+                        File file = new File(Environment.getExternalStorageDirectory() + "/avatar.jpg");
+                        if (file.exists()) {
+                            photoClip(Uri.fromFile(file));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case PHOTO_REQUEST:
+                if (data != null) {
+                    photoClip(data.getData());
+                }
+                break;
+            case PHOTO_CLIP:
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        Bitmap photo = extras.getParcelable("data");
+                        avatar.setImageBitmap(photo);
+//                        avatar.setImageURI(Uri.p);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static Bitmap blurBitmap(Bitmap bitmap, float radius, Context context) {
+        //Create renderscript
+        RenderScript rs = RenderScript.create(context);
+
+        //Create allocation from Bitmap
+        Allocation allocation = Allocation.createFromBitmap(rs, bitmap);
+
+        Type t = allocation.getType();
+
+        //Create allocation with the same type
+        Allocation blurredAllocation = Allocation.createTyped(rs, t);
+
+        //Create blur script
+        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        //Set blur radius (maximum 25.0)
+        blurScript.setRadius(radius);
+        //Set input for script
+        blurScript.setInput(allocation);
+        //Call script for output allocation
+        blurScript.forEach(blurredAllocation);
+
+        //Copy script result into bitmap
+        blurredAllocation.copyTo(bitmap);
+
+        //Destroy everything to free memory
+        allocation.destroy();
+        blurredAllocation.destroy();
+        blurScript.destroy();
+        t.destroy();
+        rs.destroy();
+        return bitmap;
+    }
+
+    private Bitmap returnBitmap(Uri uri) {
+        Bitmap bitmap = null;
+        FileBinaryResource resource = (FileBinaryResource) Fresco.getImagePipelineFactory().getMainDiskStorageCache().getResource(new SimpleCacheKey(uri.toString()));
+        File file = resource.getFile();
+        bitmap = BitmapFactory.decodeFile(file.getPath());
+        return bitmap;
+    }
+
+    public static Bitmap getBitMBitmap(String urlpath) {
+        Bitmap map = null;
+        try {
+            URL url = new URL(urlpath);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            InputStream in;
+            in = conn.getInputStream();
+            map = BitmapFactory.decodeStream(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+    /**
+     * @param urlpath
+     * @return Bitmap
+     * 根据url获取布局背景的对象
+     */
+    public static Drawable getDrawable(String urlpath){
+        Drawable d = null;
+        try {
+            URL url = new URL(urlpath);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            InputStream in;
+            in = conn.getInputStream();
+            d = Drawable.createFromStream(in, "background.jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return d;
     }
 }

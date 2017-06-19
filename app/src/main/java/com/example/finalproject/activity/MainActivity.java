@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                         cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
                         okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
-                        RequestBody requestBodyPost = new FormBody.Builder().add("name", "admin").add("pwd", "9876543210").build();
+                        RequestBody requestBodyPost = new FormBody.Builder().add("name", "admin").add("pwd", "123456").build();
                         Request requestPost = new Request.Builder().url("http://114.115.212.203:8001/do_login/").post(requestBodyPost).build();
                         okHttpClient.newCall(requestPost).enqueue(new Callback() {
                             @Override
