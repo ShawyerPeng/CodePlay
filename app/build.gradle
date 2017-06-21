@@ -45,4 +45,6 @@ dependencies {
     compile 'me.gujun.android.taggroup:library:1.4@aar'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
+
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.20'
 }

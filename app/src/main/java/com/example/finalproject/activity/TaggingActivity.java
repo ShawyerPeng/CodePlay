@@ -150,12 +150,12 @@ public class TaggingActivity extends AppCompatActivity implements AdapterView.On
         buttonStack.push(BI5);
         buttonStack.push(BI6);
 
+        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         if (sharedPreferences.getString("username", null)==null && sharedPreferences.getString("password", null)==null) {
             Intent intent = new Intent();
             intent.setClass(this, LoginActivity.class);
             startActivity(intent);
-        }        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-
+        }
 
         final Context context = this;
         gestureDetector = new GestureDetector(this);

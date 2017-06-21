@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.finalproject.R;
+import com.example.finalproject.adapter.SearchAdapter;
+import com.example.finalproject.entity.Search;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -41,11 +45,27 @@ public class SearchActivity extends AppCompatActivity {
     private static ArrayList<String> frequent = new ArrayList<String>();
     private static ArrayList<String> pid = new ArrayList<String>();
     private static ArrayList<String> aUrl = new ArrayList<String>();
+    private static ArrayList<Search> list;
+
+    private RecyclerView mRecyclerView;
+    private SearchAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        list = new ArrayList<Search>();
+        list.add(new Search("001",new String[]{"1","2","3"}));
+        list.add(new Search("002",new String[]{"4","5","6"}));
+        list.add(new Search("003",new String[]{"7","8","9"}));
+        adapter = new SearchAdapter(this, list);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.search_list);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(adapter);
+
 
         final EditText search_text = (EditText) findViewById(R.id.search_text);
         final Button search_btn = (Button) findViewById(R.id.search_btn);
@@ -54,12 +74,10 @@ public class SearchActivity extends AppCompatActivity {
 //        String username = sharedPreferences.getString("username", null);
 //        String password = sharedPreferences.getString("password", null);
 
-        runnableUi = new Runnable() {
-            @Override
-            public void run() {
-                search_result.setText("......");
-            }
-        };
+//        mRecyclerView = (RecyclerView) findViewById(R.id.search_list);
+//        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
+//        mRecyclerView.setAdapter(adapter);
 
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,42 +141,44 @@ public class SearchActivity extends AppCompatActivity {
                             });
                         }
 
-                        // 删除标签
-                        String pid_del = "1";
-                        String tags_del = "蜘蛛侠";
-                        RequestBody requestBodyDel = new FormBody.Builder().add("pid", pid_del).add("tags", tags_del).build();
-                        Request requestDel = new Request.Builder().url("http://114.115.212.203:8001/del_tags/").post(requestBodyDel).build();
-                        Response responseDel = null;
-                        try {
-                            responseDel = okHttpClient.newCall(requestDel).execute();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        String bodyDel = null;
-                        try {
-                            bodyDel = responseDel.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println(bodyDel);
 
-                        jsonObject = new JsonParser().parse(bodyDel).getAsJsonObject();
-//                        JsonArray pic = jsonObject.getAsJsonArray("pic");
-//                        System.out.println(pic);
-//                        System.out.println(pic.size());
-//                        System.out.println(pic.get(1).getAsJsonObject());
-//
-//                        for (int i=0; i<pic.size(); i++) {
-//                            JsonObject one = pic.get(i).getAsJsonObject();
-//                            frequent.add(one.get("frequent").getAsString());
-//                            pid.add(one.get("pid").getAsString());
+//                        // 删除标签
+//                        String pid_del = "1";
+//                        String tags_del = "蜘蛛侠";
+//                        RequestBody requestBodyDel = new FormBody.Builder().add("pid", pid_del).add("tags", tags_del).build();
+//                        Request requestDel = new Request.Builder().url("http://114.115.212.203:8001/del_tags/").post(requestBodyDel).build();
+//                        Response responseDel = null;
+//                        try {
+//                            responseDel = okHttpClient.newCall(requestDel).execute();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
 //                        }
+//                        String bodyDel = null;
+//                        try {
+//                            bodyDel = responseDel.body().string();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        System.out.println(bodyDel);
 
                         handler.post(runnableUi);
                     }
                 }).start();
             }
         });
+
+        runnableUi = new Runnable() {
+            @Override
+            public void run() {
+                list = new ArrayList<Search>();
+                for (int i=0; i<aUrl.size(); i++) {
+                    list.add(new Search(aUrl.get(i), new String[]{"1","2","3"}));
+                    Log.e("-----", list.toString());
+                    adapter = new SearchAdapter(SearchActivity.this, list);
+                    mRecyclerView.setAdapter(adapter);
+                }
+            }
+        };
 
 
 
